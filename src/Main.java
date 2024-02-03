@@ -9,11 +9,15 @@ import Components.Player;
 
 class Main {
     public static void main(String[] args) {
-        List<Player> players = Generate.createPlayers(4);
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the number of players:");
+        int numPlayers = scanner.nextInt();
+
+        List<Player> players = Generate.createPlayers(numPlayers);
         List<Card> deck = Generate.generateDeck();
         Collections.shuffle(deck);
 
-        Generate.dealCards(players, deck);
+        Generate.dealCards(players, deck, numPlayers);
 
         // Display each player's deck
         for (Player player : players) {

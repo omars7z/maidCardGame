@@ -72,9 +72,11 @@ public class Simulate implements Runnable {
             System.out.println(playerName + " drew " + drawnCard + " from " + nextPlayer.name);
             if (hand.stream().anyMatch(card -> card.getValue().equals(drawnCard.getValue()))) {
                 System.out.println(playerName + " discarded " + drawnCard + " because it matches a card in the hand.");
+                discarded.add(drawnCard);
             } else {
                 hand.add(drawnCard);
             }
         }
     }
+
 }

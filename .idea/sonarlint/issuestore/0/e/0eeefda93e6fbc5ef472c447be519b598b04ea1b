@@ -7,8 +7,10 @@ java:S2142"^Either re-interrupt this method or rethrow the "InterruptedExcepti
 W
 java:S2274":Remove this call to "wait" or move it into a "while" loop.(øí¼ã8“µâèÖ1
 G	java:S106!"+Replace this use of System.out by a logger.(Ú±œä8”µâèÖ1
-L	java:S1067"+Replace this use of System.out by a logger.(û˜¤„øÿÿÿÿ8•µâèÖ1
 R
-java:S1172D"0Remove this unused method parameter "discarded".(€—ÖÔüÿÿÿÿ8—µâèÖ1
-L	java:S106H"+Replace this use of System.out by a logger.(²ÈË½ÿÿÿÿÿ8—µâèÖ1
-L	java:S106J"+Replace this use of System.out by a logger.(û¬Æ½ûÿÿÿÿ8˜µâèÖ1
+java:S2446-"0"notify" may not wake up the appropriate thread.(½òò´úÿÿÿÿ8è™ìèÖ1
+L	java:S1067"+Replace this use of System.out by a logger.(û˜¤„øÿÿÿÿ8•µâèÖ1
+L	java:S106H"+Replace this use of System.out by a logger.(²ÈË½ÿÿÿÿÿ8‘Ò˜éÖ1
+L	java:S106J"+Replace this use of System.out by a logger.(û¬Æ½ûÿÿÿÿ8“Ò˜éÖ1
+R
+java:S1128"0Remove this unused import 'Components.Generate'.(ü‰Õ§ùÿÿÿÿ8ñ™ìèÖ1

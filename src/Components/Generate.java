@@ -30,9 +30,9 @@ public class Generate {
         return players;
     }
 
-    public static void dealCards(List<Player> players, List<Card> deck) {
+    public static void dealCards(List<Player> players, List<Card> deck, int numPlayers) {
         // Distribute 13 cards to each player
-        int cardsPerPlayer = 13;
+        int cardsPerPlayer = 52/numPlayers;
         int cardIndex = 0;
         for (int i = 0; i < cardsPerPlayer; i++) {
             for (Player player : players) {
