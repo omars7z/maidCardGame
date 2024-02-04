@@ -28,7 +28,7 @@ class Main {
 
         // Print initial pairs discarded by each player
         for (Player player : players) {
-            player.removeInitialPairs();
+            Functions.removeInitialPairs(player);
         }
         System.out.println();
 
@@ -53,7 +53,7 @@ class Main {
             try {
                 Thread.sleep(1000); // Introduce delay for better readability
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                e.printStackTrace(); // index out of bound exception
             }
             // Check if the current player's deck is empty to end the game
             if (currentPlayer.getDeck().isEmpty() || currentPlayer.getDeck().size() == 1 && currentPlayer.getDeck().get(0).getValue().equals("Joker")) {
