@@ -2,11 +2,11 @@
 s
 java:S1104"WMake playerIndex a static final constant or non-public and provide accessors if needed.(¬íÓU8ÚøÊèÖ1
 v	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(È‘£®8àÚ¥èÖ1
-L	java:S106/"+Replace this use of System.out by a logger.(Ğ‚ÃÑøÿÿÿÿ8‹Û¥èÖ1
+L	java:S106/"+Replace this use of System.out by a logger.(Ğ‚ÃÑøÿÿÿÿ8ÅËÆÿÖ1
 F
-java:S5413;")Verify that "remove()" is used correctly.(ÒĞ²8‹Û¥èÖ1
+java:S5413<")Verify that "remove()" is used correctly.(ÒĞ²8ÅËÆÿÖ1
 F
-java:S5413;")Verify that "remove()" is used correctly.(ÒĞ²8ŒÛ¥èÖ1
-L	java:S1064"+Replace this use of System.out by a logger.(Èáô…úÿÿÿÿ8ŒÛ¥èÖ1
-L	java:S1066"+Replace this use of System.out by a logger.(Ø–ªùÿÿÿÿ8ŒÛ¥èÖ1
-G	java:S106?"+Replace this use of System.out by a logger.(Û®÷â8Û¥èÖ1
+java:S5413<")Verify that "remove()" is used correctly.(ÒĞ²8ÅËÆÿÖ1
+L	java:S1065"+Replace this use of System.out by a logger.(Èáô…úÿÿÿÿ8ÊËÆÿÖ1
+L	java:S1067"+Replace this use of System.out by a logger.(Ø–ªùÿÿÿÿ8ËËÆÿÖ1
+G	java:S106@"+Replace this use of System.out by a logger.(Û®÷â8ÍËÆÿÖ1

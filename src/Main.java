@@ -45,6 +45,7 @@ class Main {
         int currentPlayerIndex = 0;
         while (!gameEnded) {
             Player currentPlayer = players.get(currentPlayerIndex);
+            Player nextPlayer = players.get(currentPlayerIndex+1);
             synchronized (currentPlayer.lock) {
                 currentPlayer.lock.notify(); // Notify the current player to play
             }
@@ -54,11 +55,16 @@ class Main {
                 e.printStackTrace();
             }
             // Check if the current player's deck is empty to end the game
-            if (currentPlayer.getDeck().isEmpty()) {
+            if (currentPlayer.getDeck().isEmpty() || currentPlayer.getDeck().size() == 1 && currentPlayer.getDeck().get(0).getValue().equals("Joker")) {
                 gameEnded = true;
-                System.out.println("Game Over! " + currentPlayer.name + " lost!");
+                System.out.println("\nGame Over! " + nextPlayer.name + " lost!");
             }
             currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        }
+
+        System.out.println();
+        for (Player player : players) {
+            System.out.println(player.name + ": " + player.getDeck());
         }
     }
 }

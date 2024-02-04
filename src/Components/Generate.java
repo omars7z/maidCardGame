@@ -24,6 +24,7 @@ public class Generate {
         for (int i = 0; i < numPlayers; i++) {
             Player player = new Player("Player " + (i + 1), lock, players, i);
             players.add(player);
+//            Thread thread = new Thread(new Simulate(player, players, player.lock));
             Thread thread = new Thread(String.valueOf(player));
             thread.start();
         }

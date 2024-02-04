@@ -43,12 +43,13 @@ public class Player {
     }
 
     public void removeInitialPairs() {
-        // Discarding matching pairs
+        // Discarding matching pairs, excluding the Joker
         System.out.print(name + " discarded all initial pairs: [");
         for (int i = 0; i < hand.size() - 1; i++) {
             for (int j = i + 1; j < hand.size(); j++) {
-                if (hand.get(i).getValue().equals(hand.get(j).getValue())
-                        && !hand.get(i).getSuit().equals(hand.get(j).getSuit())) {
+                if (!hand.get(i).getValue().equals("") && !hand.get(j).getValue().equals("") &&
+                        hand.get(i).getValue().equals(hand.get(j).getValue()) &&
+                        !hand.get(i).getSuit().equals(hand.get(j).getSuit())) {
                     System.out.print(hand.get(i) + " and " + hand.get(j));
                     if (i < hand.size() - 2) {
                         System.out.print(", ");
@@ -64,6 +65,6 @@ public class Player {
 
         // Remove discarded cards from hand
         hand.removeAll(discarded);
-
     }
+
 }
