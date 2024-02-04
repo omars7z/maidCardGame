@@ -1,6 +1,6 @@
-import Components.Generate;
 import Components.Card;
 import Components.Player;
+import Utilities.Functions;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ public class Simulate implements Runnable {
     public void playTurn() throws InterruptedException {
         synchronized (lock) {
             if (player.hand.isEmpty()) {
-                System.out.println(player.name + " is safe he discarded all his cards");
+                System.out.println(player.name + " is safe! (discarded all his cards)");
                 stop(); // Stop the thread when the game is over for this player
                 return;
             }
@@ -79,7 +79,7 @@ public class Simulate implements Runnable {
         Player prevPlayer = players.get((playerIndex - 1) % players.size());
         if (!prevPlayer.hand.isEmpty()) {
             Card drawnCard = prevPlayer.hand.remove(0);
-            System.out.println(prevPlayer.name + " drew \"" + drawnCard + "\" from " + playerName);
+            System.out.println(playerName + " drew \"" + drawnCard + "\" from " + prevPlayer.name);
             if (hand.stream().anyMatch(card -> card.getValue().equals(drawnCard.getValue()))) {
                 System.out.println(playerName + " discarded \"" + drawnCard + "\" because it matches a card in the hand.");
                 discarded.add(drawnCard);

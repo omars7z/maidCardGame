@@ -6,6 +6,7 @@ import java.util.Scanner;
 import Components.Generate;
 import Components.Card;
 import Components.Player;
+import Utilities.Functions;
 
 class Main {
     public static void main(String[] args) {

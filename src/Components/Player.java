@@ -30,17 +30,17 @@ public class Player {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(name).append(" deck: [");
-        for (int i = 0; i < hand.size(); i++) {
-            sb.append(hand.get(i));
-            if (i < hand.size() - 1) {
-                sb.append(", ");
+        String result = name + " deck: [";
+        if (!hand.isEmpty()) {
+            result += hand.get(0);
+            for (int i = 1; i < hand.size(); i++) {
+                result += ", " + hand.get(i);
             }
         }
-        sb.append("]");
-        return sb.toString();
+        result += "]";
+        return result;
     }
+
 
     public void removeInitialPairs() {
         // Discarding matching pairs, excluding the Joker
@@ -66,5 +66,4 @@ public class Player {
         // Remove discarded cards from hand
         hand.removeAll(discarded);
     }
-
 }
