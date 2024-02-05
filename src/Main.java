@@ -8,8 +8,9 @@ import Components.Card;
 import Components.Player;
 import Utilities.Functions;
 
-class Main {
-    public static void main(String[] args) {
+class Main implements Runnable {
+    @Override
+    public void run() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the number of players:");
         int numPlayers = scanner.nextInt();
@@ -20,13 +21,11 @@ class Main {
 
         Generate.dealCards(players, deck, numPlayers);
 
-        // Display each player's deck
         for (Player player : players) {
             System.out.println(player);
         }
         System.out.println();
 
-        // Print initial pairs discarded by each player
         for (Player player : players) {
             Functions.removeInitialPairs(player);
         }
@@ -42,30 +41,44 @@ class Main {
         }
 
         // Play the game
+        int currentPlayerIndex = 0, losingPlayerIndex = -1;
         boolean gameEnded = false;
-        int currentPlayerIndex = 0;
         while (!gameEnded) {
             Player currentPlayer = players.get(currentPlayerIndex);
-            Player nextPlayer = players.get(currentPlayerIndex+1);
             synchronized (currentPlayer.lock) {
                 currentPlayer.lock.notify(); // Notify the current player to play
             }
             try {
-                Thread.sleep(1000); // Introduce delay for better readability
+                Thread.sleep(1000); //  dela
             } catch (InterruptedException e) {
-                e.printStackTrace(); // index out of bound exception
+                e.printStackTrace();
             }
-            // Check if the current player's deck is empty to end the game
-            if (currentPlayer.getDeck().isEmpty() || currentPlayer.getDeck().size() == 1 && currentPlayer.getDeck().get(0).getValue().equals("Joker")) {
+
+            // If all other players have empty decks and the current player is not the one with the Joker, determine the losing player (surely the one after losses)
+            boolean currentPlayerHasJoker = currentPlayer.getDeck().stream().anyMatch(card -> card.getValue().equals("Joker"));
+            boolean allOtherPlayersEmpty = players.stream().filter(player -> !player.equals(currentPlayer)).allMatch(Player::isEmptyDeck);
+            if (allOtherPlayersEmpty || currentPlayerHasJoker) {
+                losingPlayerIndex = currentPlayerIndex;
                 gameEnded = true;
-                System.out.println("\nGame Over! " + nextPlayer.name + " lost!");
+                System.out.println("\nGame ended! " + currentPlayer.name + " is the loser.");
             }
+
             currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         }
 
-        System.out.println();
+        // Stop all player threads
+        for (Thread thread : simulateThreads) {
+            thread.interrupt();
+        }
+
+        System.out.println("Player: " + (losingPlayerIndex + 1) + " lost!\n");
         for (Player player : players) {
             System.out.println(player.name + ": " + player.getDeck());
         }
+    }
+
+    public static void main(String[] args) {
+        Thread mainThread = new Thread(new Main());
+        mainThread.start();
     }
 }

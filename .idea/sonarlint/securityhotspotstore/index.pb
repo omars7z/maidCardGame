@@ -40,3 +40,7 @@ Q.idea/sonarlint/securityhotspotstore/7/9/79eee28868fc2c9ca712e1458699088a356a13
 Q.idea/sonarlint/securityhotspotstore/e/1/e1750f40e021776eafa6ac3914393a2952646e57,e\0\e0096c9e495486e391c25fc9ff4ab33128bc0cf2
 Å
 Q.idea/sonarlint/securityhotspotstore/9/2/924f089edb4af5ee45c8a9d1129cd28e2b368138,b\0\b08f1ab659fbdd998f45c0def99188f980cc899b
+L
+src/Utilities/Functions.java,e\2\e2311315adab7c9c534696a0c760672a498eed58
+D
+src/TurnManager.java,d\b\db532bbcdd27d870455234059cdd043cbd268e86

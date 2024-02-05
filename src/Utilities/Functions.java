@@ -35,13 +35,16 @@ public class Functions {
     public static void discardMatchingPairs(Player player, List<Card> hand, List<Card> discarded) {
         for (int i = 0; i < hand.size() - 1; i++) {
             for (int j = i + 1; j < hand.size(); j++) {
-                if (hand.get(i).getValue().equals(hand.get(j).getValue())
-                        && !hand.get(i).getSuit().equals(hand.get(j).getSuit())) {
-                    System.out.println(player.name + " discarded " + hand.get(i) + " and " + hand.get(j));
-                    discarded.add(hand.get(i));
-                    discarded.add(hand.get(j));
-                    hand.remove(j);
-                    hand.remove(i);
+                Card card1 = hand.get(i);
+                Card card2 = hand.get(j);
+
+                // Check if the two cards form a matching pair
+                if (card1.getValue().equals(card2.getValue())) {
+                    System.out.println(player.name + " discarded " + card1 + " and " + card2);
+                    discarded.add(card1);
+                    discarded.add(card2);
+                    hand.remove(card1);
+                    hand.remove(card2);
                     // Adjust indices after removal
                     i--;
                     break;
@@ -50,16 +53,36 @@ public class Functions {
         }
     }
 
+    private static boolean areMatchingSuits(Card card1, Card card2) {
+        String suit1 = card1.getSuit();
+        String suit2 = card2.getSuit();
+        return (suit1.equals("Spades") && suit2.equals("Clubs")) ||
+                (suit1.equals("Clubs") && suit2.equals("Spades")) ||
+                (suit1.equals("Diamonds") && suit2.equals("Hearts")) ||
+                (suit1.equals("Hearts") && suit2.equals("Diamonds"));
+    }
+
     public static void drawCardFromPrevPlayer(Player player, List<Card> hand, List<Player> players, int playerIndex) {
-        Player prevPlayer = players.get((playerIndex - 1) % players.size());
+        Player prevPlayer = players.get((playerIndex - 1 + players.size()) % players.size());
+//        Player prevPlayer = players.get((playerIndex - 1) % players.size());
         if (!prevPlayer.hand.isEmpty()) {
             Card drawnCard = prevPlayer.hand.remove(0);
             System.out.println(player.name + " drew \"" + drawnCard + "\" from " + prevPlayer.name);
-            if (hand.stream().anyMatch(card -> card.getValue().equals(drawnCard.getValue()))) {
-                System.out.println(player.name + " discarded \"" + drawnCard + "\" because it matches a card in the hand.");
-                player.discarded.add(drawnCard);
-            } else {
+
+            boolean matchingCardFound = hand.removeIf(card -> {
+                if (card.getValue().equals(drawnCard.getValue())) {
+                    System.out.println(player.name + " discarded \"" + card + "\" because it matches "+ drawnCard.getValue()+" "+drawnCard.getSuit());
+                    player.discarded.add(card);
+                    return true;
+                }
+                return false;
+            });
+            if (!matchingCardFound) {
                 hand.add(drawnCard);
+            }
+            // If a matching card is found, we need to check for additional matching cards after discarding
+            if (matchingCardFound) {
+                discardMatchingPairs(player, hand, player.discarded);
             }
         }
     }

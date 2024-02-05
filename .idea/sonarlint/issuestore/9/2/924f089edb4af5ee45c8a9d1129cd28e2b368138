@@ -1,12 +1,14 @@
 
-F	java:S106"+Replace this use of System.out by a logger.(ñÎÇM8â¶í‰×1
-G	java:S106"+Replace this use of System.out by a logger.(†£³¤8ã¶í‰×1
-L	java:S106"+Replace this use of System.out by a logger.(ªÓ¼áþÿÿÿÿ8ã¶í‰×1
-L	java:S106 "+Replace this use of System.out by a logger.(ªÓ¼áþÿÿÿÿ8ä¶í‰×1
+Q
+java:S1659,"/Declare "losingPlayerIndex" on a separate line.(³Õìñüÿÿÿÿ8ÌéªÏ×1
+F	java:S106"+Replace this use of System.out by a logger.(ñÎÇM8ÐéªÏ×1
+G	java:S106"+Replace this use of System.out by a logger.(†£³¤8ÐéªÏ×1
+L	java:S106"+Replace this use of System.out by a logger.(ªÓ¼áþÿÿÿÿ8ÐéªÏ×1
+L	java:S106 "+Replace this use of System.out by a logger.(ªÓ¼áþÿÿÿÿ8ÑéªÏ×1
 M
-java:S24462"0"notify" may not wake up the appropriate thread.(Ü‚¹ó8›•§Ž×1
+java:S24461"0"notify" may not wake up the appropriate thread.(Ü‚¹ó8ÔéªÏ×1
 {
-java:S21426"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€8œ•§Ž×1
-G	java:S106<"+Replace this use of System.out by a logger.(é»¬…8ž•§Ž×1
-L	java:S106A"+Replace this use of System.out by a logger.(ªÓ¼áþÿÿÿÿ8Ÿ•§Ž×1
-G	java:S106C"+Replace this use of System.out by a logger.(Æ•ÛÜ8ÁÇËŽ×1
+java:S21425"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€8ÔéªÏ×1
+L	java:S106?"+Replace this use of System.out by a logger.(ñŽ¢Óýÿÿÿÿ8ÖéªÏ×1
+G	java:S106J"+Replace this use of System.out by a logger.(ÁýºÈ8ÖéªÏ×1
+G	java:S106L"+Replace this use of System.out by a logger.(Æ•ÛÜ8×éªÏ×1

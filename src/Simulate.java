@@ -4,11 +4,11 @@ import Utilities.Functions;
 
 import java.util.List;
 
-public class Simulate implements Runnable {
+class Simulate implements Runnable {
     private final Player player;
     private final List<Player> players;
     private final Object lock;
-    private boolean running;
+    private volatile boolean running;
 
     public Simulate(Player player, List<Player> players, Object lock) {
         this.player = player;
@@ -20,20 +20,19 @@ public class Simulate implements Runnable {
     @Override
     public void run() {
         try {
-            synchronized (lock) {
-                lock.wait(); // Wait for the main thread to notify before starting the turn
-            }
-            while (running) {
+            while (running && !Thread.interrupted()) {
+                synchronized (lock) {
+                    lock.notify();
+                    lock.wait(); // wait for the main thread to notify before starting the turn
+                }
+                if (!running || Thread.interrupted()) break; // exit if the thread is stopped
                 playTurn();
                 synchronized (lock) {
-                    lock.notify(); // Notify the main thread that this player's turn is over
-                    if (running) {
-                        lock.wait(); // Wait for the main thread to notify before starting the next turn
-                    }
+                    lock.notify(); // notify the main thread that this player's turn is over
                 }
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Thread.currentThread().interrupt(); // interrupted status
         }
     }
 
@@ -41,19 +40,21 @@ public class Simulate implements Runnable {
         running = false;
     }
 
-    public void playTurn() throws InterruptedException {
+    public void playTurn() {
         synchronized (lock) {
-            if (player.hand.isEmpty()) {
-                System.out.println(player.name + " is safe! (discarded all his cards)");
-                stop(); // Stop the thread when the game is over for this player
-                return;
+            try {
+                if (player.hand.isEmpty()) {
+                    System.out.println(player.name + " is safe! (discarded all their cards)");
+                    stop(); // stop thread when game's over for this player
+                    return;
+                }
+                // clear the discarded cards, draw from previous player, discard matching pairs immediatly
+                player.discarded.clear();
+                Functions.drawCardFromPrevPlayer(player, player.hand, players, player.playerIndex);
+                Functions.discardMatchingPairs(player, player.hand, player.discarded);
+            } catch (IndexOutOfBoundsException e) {
+                e.printStackTrace();
             }
-            // Clear the discarded cards list before each turn
-            player.discarded.clear();
-            // Discard matching pairs
-            Functions.discardMatchingPairs(player, player.hand, player.discarded);
-            // Draw a card from the previous player and discard if it matches
-            Functions.drawCardFromPrevPlayer(player, player.hand, player.players, player.playerIndex);
         }
     }
 }

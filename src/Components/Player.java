@@ -28,6 +28,10 @@ public class Player {
         return new ArrayList<>(hand);
     }
 
+    public boolean isEmptyDeck() {
+        return hand.isEmpty();
+    }
+
     @Override
     public String toString() {
         String result = name + " deck: [";

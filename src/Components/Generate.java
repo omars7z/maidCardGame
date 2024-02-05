@@ -24,7 +24,7 @@ public class Generate {
         for (int i = 0; i < numPlayers; i++) {
             Player player = new Player("Player " + (i + 1), lock, players, i);
             players.add(player);
-//            Thread thread = new Thread(new Simulate(player, players, player.lock));
+//            Thread thread = new Thread(new Simulate(player, players, lock));
             Thread thread = new Thread(String.valueOf(player));
             thread.start();
         }
@@ -32,7 +32,7 @@ public class Generate {
     }
 
     public static void dealCards(List<Player> players, List<Card> deck, int numPlayers) {
-        int cardsPerPlayer = 52/numPlayers;
+        int cardsPerPlayer = deck.size()/numPlayers;
         int cardIndex = 0;
         for (int i = 0; i < cardsPerPlayer; i++) {
             for (Player player : players) {
