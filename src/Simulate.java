@@ -22,17 +22,13 @@ class Simulate implements Runnable {
         try {
             while (running && !Thread.interrupted()) {
                 synchronized (lock) {
-                    lock.notify();
-                    lock.wait(); // wait for the main thread to notify before starting the turn
-                }
-                if (!running || Thread.interrupted()) break; // exit if the thread is stopped
-                playTurn();
-                synchronized (lock) {
-                    lock.notify(); // notify the main thread that this player's turn is over
+                    lock.wait(); // Wait for the main thread to notify before starting the turn
+                    playTurn();
+                    lock.notify(); // Notify the main thread that this player's turn is over
                 }
             }
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); // interrupted status
+            Thread.currentThread().interrupt(); // Restore interrupted status
         }
     }
 
@@ -45,10 +41,10 @@ class Simulate implements Runnable {
             try {
                 if (player.hand.isEmpty()) {
                     System.out.println(player.name + " is safe! (discarded all their cards)");
-                    stop(); // stop thread when game's over for this player
+                    stop(); // stop thread when player discards all cards
                     return;
                 }
-                // clear the discarded cards, draw from previous player, discard matching pairs immediatly
+                // clear the discarded cards, draw from previous player, discard matching pairs immediately
                 player.discarded.clear();
                 Functions.drawCardFromPrevPlayer(player, player.hand, players, player.playerIndex);
                 Functions.discardMatchingPairs(player, player.hand, player.discarded);

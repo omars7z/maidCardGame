@@ -8,9 +8,9 @@ import Components.Card;
 import Components.Player;
 import Utilities.Functions;
 
-class Main implements Runnable {
-    @Override
-    public void run() {
+class Main {
+    public static void main(String[] args) {
+        Object lock = new Object();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the number of players:");
         int numPlayers = scanner.nextInt();
@@ -21,11 +21,13 @@ class Main implements Runnable {
 
         Generate.dealCards(players, deck, numPlayers);
 
+        // Display each player's deck
         for (Player player : players) {
             System.out.println(player);
         }
         System.out.println();
 
+        // Print initial pairs discarded by each player
         for (Player player : players) {
             Functions.removeInitialPairs(player);
         }
@@ -34,7 +36,7 @@ class Main implements Runnable {
         // Create instances of Simulate and start them in separate threads
         List<Thread> simulateThreads = new ArrayList<>();
         for (Player player : players) {
-            Simulate simulate = new Simulate(player, players, player.lock);
+            Simulate simulate = new Simulate(player, players, lock);
             Thread thread = new Thread(simulate);
             thread.start();
             simulateThreads.add(thread);
@@ -44,26 +46,29 @@ class Main implements Runnable {
         int currentPlayerIndex = 0, losingPlayerIndex = -1;
         boolean gameEnded = false;
         while (!gameEnded) {
-            Player currentPlayer = players.get(currentPlayerIndex);
-            synchronized (currentPlayer.lock) {
-                currentPlayer.lock.notify(); // Notify the current player to play
+            synchronized (lock) {
+                lock.notify(); // Notify the current player to play
             }
+
             try {
-                Thread.sleep(1000); //  dela
+                Thread.sleep(1000); // Introduce delay for better readability
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
+            boolean currentPlayerHasJoker = players.get(currentPlayerIndex).getDeck().stream().anyMatch(card -> card.getValue().equals("Joker"));
+            int finalCurrentPlayerIndex = currentPlayerIndex;
+            boolean allOtherPlayersEmpty = players.stream().filter(player -> !player.equals(players.get(finalCurrentPlayerIndex))).allMatch(Player::isEmptyDeck);
             // If all other players have empty decks and the current player is not the one with the Joker, determine the losing player (surely the one after losses)
-            boolean currentPlayerHasJoker = currentPlayer.getDeck().stream().anyMatch(card -> card.getValue().equals("Joker"));
-            boolean allOtherPlayersEmpty = players.stream().filter(player -> !player.equals(currentPlayer)).allMatch(Player::isEmptyDeck);
-            if (allOtherPlayersEmpty || currentPlayerHasJoker) {
+            if (allOtherPlayersEmpty && !currentPlayerHasJoker) {
+                System.out.println("\nGame ended! All other players have emptied their hands.");
                 losingPlayerIndex = currentPlayerIndex;
                 gameEnded = true;
-                System.out.println("\nGame ended! " + currentPlayer.name + " is the loser.");
             }
 
-            currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+            synchronized (lock) {
+                currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+            }
         }
 
         // Stop all player threads
@@ -71,14 +76,13 @@ class Main implements Runnable {
             thread.interrupt();
         }
 
-        System.out.println("Player: " + (losingPlayerIndex + 1) + " lost!\n");
+        // Print the index of the winning player
+        System.out.println("Player: " + (losingPlayerIndex + 1) + " lost!");
+
+        // Print final decks of all players
+        System.out.println();
         for (Player player : players) {
             System.out.println(player.name + ": " + player.getDeck());
         }
-    }
-
-    public static void main(String[] args) {
-        Thread mainThread = new Thread(new Main());
-        mainThread.start();
     }
 }

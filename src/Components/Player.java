@@ -11,13 +11,16 @@ public class Player {
     public int playerIndex;
     public final List<Card> discarded;
 
-    public Player(String name, Object lock, List<Player> players, int playerIndex) {
+    public int sharedCurrentIndex = 0;
+
+    public Player(String name, Object lock, List<Player> players, int playerIndex, int sharedCurrentIndex) {
         this.name = name;
         this.hand = new ArrayList<>();
         this.lock = lock;
         this.players = players;
         this.playerIndex = playerIndex;
-        this.discarded = new ArrayList<>(); // Initialize the discarded cards list
+        this.sharedCurrentIndex = sharedCurrentIndex;
+        this.discarded = new ArrayList<>();
     }
 
     public void receiveCard(Card card) {

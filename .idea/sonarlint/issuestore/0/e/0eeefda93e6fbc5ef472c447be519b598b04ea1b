@@ -1,8 +1,6 @@
 
-M
-java:S2446"0"notify" may not wake up the appropriate thread.(ŒâÌ†8Ş÷ÀÏ×1
 R
-java:S2446"0"notify" may not wake up the appropriate thread.(æ‚ç‘üÿÿÿÿ8â÷ÀÏ×1
-G	java:S106/"+Replace this use of System.out by a logger.(å®òĞ8Ì‡ºÏ×1
+java:S2446"0"notify" may not wake up the appropriate thread.(¦“Şùÿÿÿÿ8¼Èåî×1
+G	java:S106+"+Replace this use of System.out by a logger.(å®òĞ8ŠÉÿï×1
 N
-java:S1128",Remove this unused import 'Components.Card'.(Üïòğüÿÿÿÿ8è÷ÀÏ×1
+java:S1128",Remove this unused import 'Components.Card'.(Üïòğüÿÿÿÿ8õØ¦î×1

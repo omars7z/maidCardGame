@@ -44,3 +44,5 @@ L
 src/Utilities/Functions.java,e\2\e2311315adab7c9c534696a0c760672a498eed58
 D
 src/TurnManager.java,d\b\db532bbcdd27d870455234059cdd043cbd268e86
+D
+src/GameManager.java,4\c\4c814b4939bd088c9ad8111ff69532ee77e0625a

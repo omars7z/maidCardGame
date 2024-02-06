@@ -39,7 +39,7 @@ public class Functions {
                 Card card2 = hand.get(j);
 
                 // Check if the two cards form a matching pair
-                if (card1.getValue().equals(card2.getValue())) {
+                if (areMatchingSuits(card1, card2) && card1.getValue().equals(card2.getValue())) {
                     System.out.println(player.name + " discarded " + card1 + " and " + card2);
                     discarded.add(card1);
                     discarded.add(card2);
@@ -64,7 +64,6 @@ public class Functions {
 
     public static void drawCardFromPrevPlayer(Player player, List<Card> hand, List<Player> players, int playerIndex) {
         Player prevPlayer = players.get((playerIndex - 1 + players.size()) % players.size());
-//        Player prevPlayer = players.get((playerIndex - 1) % players.size());
         if (!prevPlayer.hand.isEmpty()) {
             Card drawnCard = prevPlayer.hand.remove(0);
             System.out.println(player.name + " drew \"" + drawnCard + "\" from " + prevPlayer.name);
@@ -80,6 +79,8 @@ public class Functions {
             if (!matchingCardFound) {
                 hand.add(drawnCard);
             }
+            // Update the shared current index after drawing a card
+            player.sharedCurrentIndex = (player.sharedCurrentIndex + 1) % players.size();
             // If a matching card is found, we need to check for additional matching cards after discarding
             if (matchingCardFound) {
                 discardMatchingPairs(player, hand, player.discarded);
