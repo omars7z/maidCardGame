@@ -17,70 +17,64 @@ class Main {
 
         List<Player> players = Generate.createPlayers(numPlayers);
         List<Card> deck = Generate.generateDeck();
-        Collections.shuffle(deck);
 
+        Collections.shuffle(deck);
         Generate.dealCards(players, deck, numPlayers);
 
-        // Display each player's deck
+        // display players decks and remove initial pairs
         for (Player player : players) {
             System.out.println(player);
         }
         System.out.println();
-
-        // Print initial pairs discarded by each player
         for (Player player : players) {
             Functions.removeInitialPairs(player);
         }
         System.out.println();
 
-        // Create instances of Simulate and start them in separate threads
+        // create instances of Simulate and start them in separate threads
         List<Thread> simulateThreads = new ArrayList<>();
-        for (Player player : players) {
-            Simulate simulate = new Simulate(player, players, lock);
+        for (int i = 0; i < players.size(); i++) {
+            Simulate simulate = new Simulate(players.get(i), players, lock);
             Thread thread = new Thread(simulate);
-            thread.start();
             simulateThreads.add(thread);
+            thread.start();
         }
 
-        // Play the game
+        // play the game
         int currentPlayerIndex = 0, losingPlayerIndex = -1;
         boolean gameEnded = false;
         while (!gameEnded) {
             synchronized (lock) {
-                lock.notify(); // Notify the current player to play
+                lock.notify(); // notify the current player to play
             }
 
             try {
-                Thread.sleep(1000); // Introduce delay for better readability
+                Thread.sleep(1000); // delay for readability
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
             boolean currentPlayerHasJoker = players.get(currentPlayerIndex).getDeck().stream().anyMatch(card -> card.getValue().equals("Joker"));
-            int finalCurrentPlayerIndex = currentPlayerIndex;
+            int finalCurrentPlayerIndex = currentPlayerIndex; //utilized streams to iterate through collections without needing loops
             boolean allOtherPlayersEmpty = players.stream().filter(player -> !player.equals(players.get(finalCurrentPlayerIndex))).allMatch(Player::isEmptyDeck);
-            // If all other players have empty decks and the current player is not the one with the Joker, determine the losing player (surely the one after losses)
+
             if (allOtherPlayersEmpty && !currentPlayerHasJoker) {
-                System.out.println("\nGame ended! All other players have emptied their hands.");
+                System.out.println("\nGame ended! All players have emptied their hands.");
                 losingPlayerIndex = currentPlayerIndex;
                 gameEnded = true;
             }
 
+            // synchronized player index when iterating across all threads
             synchronized (lock) {
                 currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
             }
         }
 
-        // Stop all player threads
         for (Thread thread : simulateThreads) {
             thread.interrupt();
         }
 
-        // Print the index of the winning player
-        System.out.println("Player: " + (losingPlayerIndex + 1) + " lost!");
-
-        // Print final decks of all players
-        System.out.println();
+        System.out.println("Player: " + (losingPlayerIndex + 1) + " lost!\n");
         for (Player player : players) {
             System.out.println(player.name + ": " + player.getDeck());
         }

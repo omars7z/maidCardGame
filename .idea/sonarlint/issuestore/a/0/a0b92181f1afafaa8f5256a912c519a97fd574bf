@@ -1,8 +1,8 @@
 
 9
-java:S1643,"Use a StringBuilder instead.(”‹”Ë8òÃÂÓ×1
+java:S1643,"Use a StringBuilder instead.(”‹”Ë8¼’–ñ×1
 s
-java:S1104"WMake playerIndex a static final constant or non-public and provide accessors if needed.(¬íÓU8óÃÂÓ×1
+java:S1104"WMake playerIndex a static final constant or non-public and provide accessors if needed.(¬íÓU8¼’–ñ×1
 €
-java:S1104"^Make sharedCurrentIndex a static final constant or non-public and provide accessors if needed.(ê´­óıÿÿÿÿ8óÃÂÓ×1
+java:S1104"^Make sharedCurrentIndex a static final constant or non-public and provide accessors if needed.(ê´­óıÿÿÿÿ8¼’–ñ×1
 v	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(È‘£®8óÃÂÓ×1

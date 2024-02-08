@@ -56,10 +56,8 @@ public class Functions {
     private static boolean areMatchingSuits(Card card1, Card card2) {
         String suit1 = card1.getSuit();
         String suit2 = card2.getSuit();
-        return (suit1.equals("Spades") && suit2.equals("Clubs")) ||
-                (suit1.equals("Clubs") && suit2.equals("Spades")) ||
-                (suit1.equals("Diamonds") && suit2.equals("Hearts")) ||
-                (suit1.equals("Hearts") && suit2.equals("Diamonds"));
+        return (suit1.equals("Spades") && suit2.equals("Clubs")) || (suit1.equals("Clubs") && suit2.equals("Spades")) ||
+                (suit1.equals("Diamonds") && suit2.equals("Hearts")) || (suit1.equals("Hearts") && suit2.equals("Diamonds"));
     }
 
     public static void drawCardFromPrevPlayer(Player player, List<Card> hand, List<Player> players, int playerIndex) {
