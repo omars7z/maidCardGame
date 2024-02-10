@@ -10,7 +10,7 @@ class Simulate implements Runnable {
     private final Player player;
     private final List<Player> players;
     private final Object lock;
-    private Player losingPlayer; // Declare losingPlayer variable here
+    private Player losingPlayer;
 
     public static int currentPlayerIndex;
     public CyclicBarrier barrier;
@@ -45,7 +45,7 @@ class Simulate implements Runnable {
         return false;
     }
 
-    boolean isMyTurn() {
+    boolean isMyTurn(int currentPlayerIndex) {
         return currentPlayerIndex == player.playerIndex;
     }
 
@@ -62,11 +62,10 @@ class Simulate implements Runnable {
         }
         synchronized (lock) {
             while (!isGameEnded() && !hasLoser()) {
-                if (isMyTurn()) {
+                if (isMyTurn(currentPlayerIndex)) {
                     playTurn();
                     currentPlayerIndex++;
-//                    System.out.println(currentPlayerIndex);
-                    currentPlayerIndex %= players.size();
+                    currentPlayerIndex %= players.size()-1;
                     lock.notifyAll();
                 } else {
                     try {
@@ -76,15 +75,11 @@ class Simulate implements Runnable {
                     }
                 }
             }
-            if (hasLoser()) {
-                System.out.println("Player " + (losingPlayer.playerIndex + 1) + " lost!\n");
-                return;
-            }
         }
     }
 
     public void playTurn() {
-        System.out.println("PLAYER "+ player.playerIndex+1 +" HAND SIZE: " + player.hand.size());
+//        System.out.println("PLAYER HAND SIZE " + player.hand.size());
         Functions.drawCardFromPrevPlayer(player, player.hand, players, player.playerIndex);
         Functions.discardMatchingPairs(player, player.hand, player.discarded);
     }

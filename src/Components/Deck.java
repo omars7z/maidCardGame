@@ -29,7 +29,7 @@ public class Deck {
     }
 
     public static void dealCards(List<Player> players, List<Card> deck, int numPlayers) {
-        int cardsPerPlayer = deck.size()/numPlayers;
+        int cardsPerPlayer = deck.size() / numPlayers;
         int cardIndex = 0;
         for (int i = 0; i < cardsPerPlayer; i++) {
             for (Player player : players) {

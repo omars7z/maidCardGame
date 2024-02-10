@@ -45,9 +45,10 @@ class Main {
             }
         }
 
-
-//        System.out.println("Player: " + (losingPlayerIndex + 1) + " lost!\n");
         for (Player player : players) {
+            if (!player.getDeck().isEmpty()) {
+                System.out.println(player.name + " lost!");
+            }
             System.out.println(player.name + ": " + player.getDeck());
         }
     }

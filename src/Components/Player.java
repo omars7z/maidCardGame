@@ -11,8 +11,6 @@ public class Player {
     public int playerIndex;
     public final List<Card> discarded;
 
-    public int sharedCurrentIndex = 0;
-
     public Player(String name, Object lock, List<Player> players, int playerIndex) {
         this.name = name;
         this.hand = new ArrayList<>();

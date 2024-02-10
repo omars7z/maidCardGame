@@ -28,7 +28,6 @@ public class Functions {
             }
         }
         System.out.println("]");
-
         // Remove discarded cards from hand
         player.hand.removeAll(player.discarded);
     }
