@@ -13,13 +13,12 @@ public class Player {
 
     public int sharedCurrentIndex = 0;
 
-    public Player(String name, Object lock, List<Player> players, int playerIndex, int sharedCurrentIndex) {
+    public Player(String name, Object lock, List<Player> players, int playerIndex) {
         this.name = name;
         this.hand = new ArrayList<>();
         this.lock = lock;
         this.players = players;
         this.playerIndex = playerIndex;
-        this.sharedCurrentIndex = sharedCurrentIndex;
         this.discarded = new ArrayList<>();
     }
 
@@ -29,10 +28,6 @@ public class Player {
 
     public List<Card> getDeck() {
         return new ArrayList<>(hand);
-    }
-
-    public boolean isEmptyDeck() {
-        return hand.isEmpty();
     }
 
     @Override

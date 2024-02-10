@@ -10,6 +10,7 @@ public class Functions {
     public static void removeInitialPairs(Player player) {
         // Discarding matching pairs, excluding the Joker
         System.out.print(player.name + " discarded all initial pairs: [");
+        System.out.println();
         for (int i = 0; i < player.hand.size() - 1; i++) {
             for (int j = i + 1; j < player.hand.size(); j++) {
                 if (!player.hand.get(i).getValue().equals("") && !player.hand.get(j).getValue().equals("") &&
@@ -33,20 +34,26 @@ public class Functions {
     }
 
     public static void discardMatchingPairs(Player player, List<Card> hand, List<Card> discarded) {
-        for (int i = 0; i < hand.size() - 1; i++) {
-            for (int j = i + 1; j < hand.size(); j++) {
-                Card card1 = hand.get(i);
-                Card card2 = hand.get(j);
+        boolean foundMatchingPair = true;
+        while (foundMatchingPair) {
+            foundMatchingPair = false; // Reset flag for each iteration
+            for (int i = 0; i < hand.size() - 1; i++) {
+                for (int j = i + 1; j < hand.size(); j++) {
+                    Card card1 = hand.get(i);
+                    Card card2 = hand.get(j);
 
-                // Check if the two cards form a matching pair
-                if (areMatchingSuits(card1, card2) && card1.getValue().equals(card2.getValue())) {
-                    System.out.println(player.name + " discarded " + card1 + " and " + card2);
-                    discarded.add(card1);
-                    discarded.add(card2);
-                    hand.remove(card1);
-                    hand.remove(card2);
-                    // Adjust indices after removal
-                    i--;
+                    // Check if the two cards form a matching pair
+                    if (areMatchingSuits(card1, card2) && card1.getValue().equals(card2.getValue())) {
+                        System.out.println(player.name + " discarded " + card1 + " and " + card2);
+                        discarded.add(card1);
+                        discarded.add(card2);
+                        hand.remove(card1);
+                        hand.remove(card2);
+                        foundMatchingPair = true;
+                        break;
+                    }
+                }
+                if (foundMatchingPair) {
                     break;
                 }
             }
@@ -68,19 +75,16 @@ public class Functions {
 
             boolean matchingCardFound = hand.removeIf(card -> {
                 if (card.getValue().equals(drawnCard.getValue())) {
-                    System.out.println(player.name + " discarded \"" + card + "\" because it matches "+ drawnCard.getValue()+" "+drawnCard.getSuit());
+                    System.out.println(player.name + " discarded \"" + card + "\" because it matches a card in deck");
                     player.discarded.add(card);
                     return true;
                 }
                 return false;
             });
+
             if (!matchingCardFound) {
                 hand.add(drawnCard);
-            }
-            // Update the shared current index after drawing a card
-            player.sharedCurrentIndex = (player.sharedCurrentIndex + 1) % players.size();
-            // If a matching card is found, we need to check for additional matching cards after discarding
-            if (matchingCardFound) {
+            } else {
                 discardMatchingPairs(player, hand, player.discarded);
             }
         }

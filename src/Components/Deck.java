@@ -3,7 +3,7 @@ package Components;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Generate {
+public class Deck {
     public static List<Card> generateDeck() {
         List<Card> deck = new ArrayList<>();
         String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
@@ -22,10 +22,8 @@ public class Generate {
         List<Player> players = new ArrayList<>();
         Object lock = new Object();
         for (int i = 0; i < numPlayers; i++) {
-            Player player = new Player("Player " + (i + 1), lock, players, i, 0);
+            Player player = new Player("Player " + (i + 1), lock, players, i);
             players.add(player);
-            Thread thread = new Thread(String.valueOf(player));
-            thread.start();
         }
         return players;
     }

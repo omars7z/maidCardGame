@@ -3,54 +3,89 @@ import Components.Player;
 import Utilities.Functions;
 
 import java.util.List;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 
 class Simulate implements Runnable {
     private final Player player;
     private final List<Player> players;
     private final Object lock;
-    private volatile boolean running;  //changes to its value by main thread are immediately visible to all simulate threads
+    private Player losingPlayer; // Declare losingPlayer variable here
 
-    public Simulate(Player player, List<Player> players, Object lock) {
+    public static int currentPlayerIndex;
+    public CyclicBarrier barrier;
+
+    public Simulate(Player player, List<Player> players, Object lock, CyclicBarrier barrier, int currentPlayerIndex) {
         this.player = player;
         this.players = players;
         this.lock = lock;
-        this.running = true;
+        this.barrier = barrier;
+        this.currentPlayerIndex = currentPlayerIndex;
+    }
+
+    boolean isGameEnded() {
+        int playersWithCards = 0;
+        for (Player p : players) {
+            if (!p.getDeck().isEmpty()) {
+                playersWithCards++;
+            }
+        }
+        return playersWithCards == 1;
+    }
+
+    private boolean hasLoser() {
+        if (isGameEnded()) {
+            for (Player p : players) {
+                if (!p.getDeck().isEmpty() && p.getDeck().contains(new Card("Joker", ""))) {
+                    losingPlayer = p;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    boolean isMyTurn() {
+        return currentPlayerIndex == player.playerIndex;
     }
 
     @Override
     public void run() {
+        // discardInitialPairs
+        Functions.removeInitialPairs(player);
+        System.out.println();
+        // use cyclicBarrier
         try {
-            while (running && !Thread.interrupted()) {
-                synchronized (lock) {
-                    lock.wait(); // wait for the main thread to notify before starting the turn
+            barrier.await();
+        } catch (BrokenBarrierException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        synchronized (lock) {
+            while (!isGameEnded() && !hasLoser()) {
+                if (isMyTurn()) {
                     playTurn();
-                    lock.notify(); // notify the main thread that this player's turn is over
+                    currentPlayerIndex++;
+//                    System.out.println(currentPlayerIndex);
+                    currentPlayerIndex %= players.size();
+                    lock.notifyAll();
+                } else {
+                    try {
+                        lock.wait();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); // interrupted status
+            if (hasLoser()) {
+                System.out.println("Player " + (losingPlayer.playerIndex + 1) + " lost!\n");
+                return;
+            }
         }
-    }
-
-    public void stop() {
-        running = false;
     }
 
     public void playTurn() {
-        synchronized (lock) {
-            try {
-                if (player.hand.isEmpty()) {
-                    System.out.println(player.name + " is safe! (discarded all their cards)");
-                    stop(); // stop thread when player discards all cards
-                    return;
-                }
-                // clear discarded cards, draw from previous player, discard matching pairs immediately
-                player.discarded.clear();
-                Functions.drawCardFromPrevPlayer(player, player.hand, players, player.playerIndex);
-                Functions.discardMatchingPairs(player, player.hand, player.discarded);
-            } catch (IndexOutOfBoundsException e) {
-                e.printStackTrace();
-            }
-        }
+        System.out.println("PLAYER "+ player.playerIndex+1 +" HAND SIZE: " + player.hand.size());
+        Functions.drawCardFromPrevPlayer(player, player.hand, players, player.playerIndex);
+        Functions.discardMatchingPairs(player, player.hand, player.discarded);
     }
 }
