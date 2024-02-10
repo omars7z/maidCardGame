@@ -3,35 +3,40 @@ package Utilities;
 import Components.Card;
 import Components.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Functions {
 
     public static void removeInitialPairs(Player player) {
-        // Discarding matching pairs, excluding the Joker
-        System.out.print(player.name + " discarded all initial pairs: [");
-        System.out.println();
+        List<String> initialPairs = new ArrayList<>();
+
         for (int i = 0; i < player.hand.size() - 1; i++) {
             for (int j = i + 1; j < player.hand.size(); j++) {
-                if (!player.hand.get(i).getValue().equals("") && !player.hand.get(j).getValue().equals("") &&
-                        player.hand.get(i).getValue().equals(player.hand.get(j).getValue()) &&
-                        !player.hand.get(i).getSuit().equals(player.hand.get(j).getSuit())) {
-                    System.out.print(player.hand.get(i) + " and " + player.hand.get(j));
-                    if (i < player.hand.size() - 2) {
-                        System.out.print(", ");
-                    }
-                    player.discarded.add(player.hand.get(i));
-                    player.discarded.add(player.hand.get(j));
-                    player.hand.remove(j);
-                    player.hand.remove(i);
+                Card card1 = player.hand.get(i);
+                Card card2 = player.hand.get(j);
+
+                if (!card1.getValue().equals("") && !card2.getValue().equals("") &&
+                        card1.getValue().equals(card2.getValue()) &&
+                        !card1.getSuit().equals(card2.getSuit())) {
+                    initialPairs.add(card1 + " and " + card2);
+                    player.discarded.add(card1);
+                    player.discarded.add(card2);
                 }
             }
         }
-        System.out.println("]");
-        // Remove discarded cards from hand
+
+        if (!initialPairs.isEmpty()) {
+            StringBuilder sb = new StringBuilder(player.name + " discarded all initial pairs: [");
+            sb.append(initialPairs.get(0));
+            for (int i = 1; i < initialPairs.size(); i++) {
+                sb.append(", ").append(initialPairs.get(i));
+            }
+            sb.append("]");
+            System.out.println(sb.toString());
+        }
         player.hand.removeAll(player.discarded);
     }
-
     public static void discardMatchingPairs(Player player, List<Card> hand, List<Card> discarded) {
         boolean foundMatchingPair = true;
         while (foundMatchingPair) {

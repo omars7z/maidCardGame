@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
-class Simulate implements Runnable {
+class Threads implements Runnable {
     private final Player player;
     private final List<Player> players;
     private final Object lock;
@@ -14,46 +14,21 @@ class Simulate implements Runnable {
 
     public static int currentPlayerIndex;
     public CyclicBarrier barrier;
+    private final GameManager gameManager;
 
-    public Simulate(Player player, List<Player> players, Object lock, CyclicBarrier barrier, int currentPlayerIndex) {
+    public Threads(Player player, List<Player> players, Object lock, CyclicBarrier barrier, int currentPlayerIndex, GameManager gameManager) {
         this.player = player;
         this.players = players;
         this.lock = lock;
         this.barrier = barrier;
         this.currentPlayerIndex = currentPlayerIndex;
-    }
-
-    boolean isGameEnded() {
-        int playersWithCards = 0;
-        for (Player p : players) {
-            if (!p.getDeck().isEmpty()) {
-                playersWithCards++;
-            }
-        }
-        return playersWithCards == 1;
-    }
-
-    private boolean hasLoser() {
-        if (isGameEnded()) {
-            for (Player p : players) {
-                if (!p.getDeck().isEmpty() && p.getDeck().contains(new Card("Joker", ""))) {
-                    losingPlayer = p;
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    boolean isMyTurn(int currentPlayerIndex) {
-        return currentPlayerIndex == player.playerIndex;
+        this.gameManager = gameManager;
     }
 
     @Override
     public void run() {
         // discardInitialPairs
         Functions.removeInitialPairs(player);
-        System.out.println();
         // use cyclicBarrier
         try {
             barrier.await();
@@ -61,8 +36,8 @@ class Simulate implements Runnable {
             throw new RuntimeException(e);
         }
         synchronized (lock) {
-            while (!isGameEnded() && !hasLoser()) {
-                if (isMyTurn(currentPlayerIndex)) {
+            while (!gameManager.isGameEnded() && !gameManager.hasLoser()) {
+                if (gameManager.isMyTurn(currentPlayerIndex, player)) {
                     playTurn();
                     currentPlayerIndex++;
                     currentPlayerIndex %= players.size()-1;
@@ -79,7 +54,6 @@ class Simulate implements Runnable {
     }
 
     public void playTurn() {
-//        System.out.println("PLAYER HAND SIZE " + player.hand.size());
         Functions.drawCardFromPrevPlayer(player, player.hand, players, player.playerIndex);
         Functions.discardMatchingPairs(player, player.hand, player.discarded);
     }
